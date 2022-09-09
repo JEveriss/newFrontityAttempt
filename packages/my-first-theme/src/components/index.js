@@ -7,13 +7,15 @@ import Link from "@frontity/components/link";
 import Switch from "@frontity/components/switch";
 
 import List from "./list";
+import Post from "./post";
+import Page from "./page";
 
 // Then pass 'state' as a (destructured) prop to our component
 const Root = ({ state }) => {
   const data = state.source.get(state.router.link);
   return (
     <>
-      <h1>still good world</h1>
+      <h1>Still good, World</h1>
       <p>Current URL is:- {state.router.link} </p>
       <nav>
         {/* 'Link' is the same as an <a> but doesn't reload the page */}
@@ -28,10 +30,13 @@ const Root = ({ state }) => {
       <hr />
 
       <main>
+        {/* 'Switch acts the same as JS where the first matching 
+      condition is the one that is executed.  */}
         <Switch>
           <List when={data.isArchive} />
-          <div when={data.isPost}>This is a post</div>
-          <div when={data.isPage}>This is a page</div>
+          {/* 'when' is semantic - activate when true */}
+          <Post when={data.isPost} />
+          <Page when={data.isPage} />
         </Switch>
       </main>
     </>
