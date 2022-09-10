@@ -6,10 +6,16 @@ const myFirstTheme = {
     myTheeme: Root
   },
   state: {
-    myTheeme: {}
+    myTheeme: {
+      isUrlVisible: true,
+    }
   },
   actions: {
-    myTheeme: {}
+    myTheeme: {
+      toggleUrl: ({ state }) => {
+        state.myTheeme.isUrlVisible = !state.myTheeme.isUrlVisible
+      }
+    }
   }
 };
 
