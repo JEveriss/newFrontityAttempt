@@ -4,20 +4,27 @@ import React from "react";
 //'Global' component has the styles attribute
 // styles takes in 'css' function as its value
 // styled is for Styled Components
-import { connect, Global, css, styled } from "frontity";
-// 'Link' is an in-built frontity component
-import Link from "@frontity/components/link";
+import { connect, Global, css, styled, Head } from "frontity";
+// 'Switch' is an in-built frontity component
 import Switch from "@frontity/components/switch";
 
 import List from "./list";
 import Post from "./post";
 import Page from "./page";
+import Loading from "./loading";
+import Error from "./error.js";
+import Header from "./header";
 
 // Then pass 'state' as a (destructured) prop to our component
-const Root = ({ state, actions }) => {
+const Root = ({ state }) => {
   const data = state.source.get(state.router.link);
+
   return (
     <>
+      <Head>
+        <title>My frontity theme</title>
+        <meta name="description" content="Frontitty tutorial template" />
+      </Head>
       <Global
         styles={css`
           * {
@@ -25,7 +32,6 @@ const Root = ({ state, actions }) => {
             padding: 0;
             box-sizing: border-box;
           }
-
           body {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -38,40 +44,19 @@ const Root = ({ state, actions }) => {
           }
         `}
       />
-      <Header isPostType={data.isPostType} isPage={data.isPage}>
-        <HeaderContent>
-          <h1>Still good, World</h1>
-          {state.myTheeme.isUrlVisible ? (
-            <>
-              {" "}
-              Current URL is:- {state.router.link}{" "}
-              <Button onClick={actions.myTheeme.toggleUrl}>
-                &#x3c; Hide URL{" "}
-              </Button>{" "}
-            </>
-          ) : (
-            <Button onClick={actions.myTheeme.toggleUrl}>
-              &#x3c; Hide URL{" "}
-            </Button>
-          )}
-          <Menu>
-            {/* 'Link' is the same as an <a> but doesn't reload the page */}
-            <Link link="/">Home</Link>
-            <br />
-            <Link link="/about-us">Aboutus</Link>
-            <br />
-          </Menu>
-        </HeaderContent>
-      </Header>
-
+      <Header />
       <Main>
         {/* 'Switch acts the same as JS where the first matching 
       condition is the one that is executed.  */}
         <Switch>
-          <List when={data.isArchive} />
           {/* 'when' is semantic - activate when true */}
-          <Post when={data.isPost} />
+          {/* show the contents of PAGE when data.isPage is true */}
+          <Loading when={data.isFetching} />
+          <List when={data.isArchive} />
           <Page when={data.isPage} />
+          <Post when={data.isPost} />
+          <Page when={data.isDestinations} />
+          <Error when={data.isError} />
         </Switch>
       </Main>
     </>
@@ -89,28 +74,10 @@ The Frontity object has amongst its properties 'state', 'actions' and 'libraries
 or functions available in 'actions'.
 */
 
-const Header = styled.header`
-  background-color: burlywood;
-  border-width: 0 0 4px 0;
-  border-style: solid;
-  border-color: ${(props) =>
-    props.isPostType ? (props.isPage ? "lightpink" : "maroon") : "#559"};
-  h1 {
-    color: #559;
-  }
-`;
-
-const HeaderContent = styled.div`
-  max-width: 800px;
-  padding: 2rem 1rem;
-  margin: auto;
-`;
-
 const Main = styled.main`
   max-width: 800px;
   padding: 1rem;
   margin: auto;
-
   img {
     max-width: 100%;
   }
@@ -124,26 +91,5 @@ const Main = styled.main`
     color: lightpink;
     font-size: 0.8rem;
     margin-bottom: 1rem;
-  }
-`;
-
-const Menu = styled.nav`
-  display: flex;
-  flex-direction: row;
-  margin-top: 1rem;
-  & > a {
-    margin-right: 1rem;
-    color: maroon;
-    text-decoration: none;
-  }
-`;
-
-const Button = styled.button`
-  background: transparent;
-  border: none;
-  color: #333;
-  :hover {
-    cursor: pointer;
-    color: #559;
   }
 `;

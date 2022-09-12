@@ -16,14 +16,16 @@ const List = ({ state, actions }) => {
   The items array is then being targeted and mapped
   */
 
+  //   const str = post.title;
+  // if(str.length > 10) str = str.substring(0,10);
+
   return (
     <Items>
       {data.items.map((item) => {
         const post = state.source[item.type][item.id];
+        const preview = post.excerpt.rendered;
         return (
           <Link key={item.id} link={post.link}>
-            {item.type} {item.id}
-            <br />
             {/* 
             EG:
             post = frontity.state.source.post[60]
@@ -32,7 +34,15 @@ const List = ({ state, actions }) => {
             rendered: 'Whatever the title is'
              */}
             {post.title.rendered}
-            {/* {item.link} */}
+            <br />
+            {preview.length > 10 ? (
+              <p>
+                {preview.substring(3, 89)}... <br />
+                <span className="readmore">Read More</span>
+              </p>
+            ) : (
+              preview
+            )}
             <br />
             <br />
           </Link>
@@ -71,6 +81,9 @@ const Items = styled.div`
     font-size: 1.2rem;
     color: maroon;
     text-decoration: none;
+  }
+  .readmore {
+    color: #000;
   }
 `;
 
